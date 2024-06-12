@@ -1,7 +1,13 @@
 import React from "react";
 
 const Item = (props) => {
-  return <li>Item desc.: {props.name}</li>;
+  const status = props.status;
+
+  return (
+    <li>
+      {props.name} Status: {status ? "completo" : "incompleto"}
+    </li>
+  );
 };
 
 export default Item;
