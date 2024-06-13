@@ -1,4 +1,5 @@
 import React from "react";
+import UserList from "./UserList";
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -30,29 +31,44 @@ export default class Login extends React.Component {
     };
     fetch(url, requestOption)
       .then((response) => response.json())
-      .then((data) => localStorage.setItem("token", data.token));
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        this.setState({ token: data.token });
+      });
 
     event.preventDefault();
   }
-
+  logout() {
+    localStorage.removeItem("token");
+    this.setState({ token: null });
+  }
   render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input
-            type="text"
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
-          <input
-            type="password"
-            value={this.state.password}
-            onChange={this.handlePassword}
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    );
+    var token = localStorage.getItem("token");
+    if (!token)
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Name:
+            <input
+              type="text"
+              value={this.state.username}
+              onChange={this.handleChange}
+            />
+            <input
+              type="password"
+              value={this.state.password}
+              onChange={this.handlePassword}
+            />
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
+      );
+    else
+      return (
+        <>
+          <UserList />
+          <button onClick={() => this.logout()}>Logout</button>
+        </>
+      );
   }
 }
